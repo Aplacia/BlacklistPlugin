@@ -1,0 +1,60 @@
+package listeners;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.UUID;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+
+import aplacia.Main;
+
+public class UnbanCommand implements CommandExecutor{
+	private FileConfiguration logs;
+	
+	public UnbanCommand(FileConfiguration logs){
+		this.logs = logs;
+	}
+	
+	@Override
+	public boolean onCommand(CommandSender s, Command cmd, String cmdName, String[] args) {
+		if (cmd.getName().equalsIgnoreCase("unban") && s.hasPermission("SimpleBlacklist.unban")
+			&& s instanceof Player) {
+			if (args.length > 1) {
+				Player sender = (Player)s;
+				if (!(Main.BannedUUID.contains(args[0]))) {
+					sender.sendMessage(ChatColor.RED + "Player has never been banned");
+					return true;
+				}
+				
+				ArrayList<String> list = new ArrayList<String>();
+				
+				Main.BannedIP.remove(Main.BannedIP.get(Main.BannedUUID.indexOf(args[0])));
+				Main.BannedUUID.remove(args[0]);
+				
+				String message = " ";
+				for(int i = 0; i < args.length; i++) {
+					if (i != 0) {
+						message = message + args[i] + " ";
+					}
+				}
+				
+				list = (ArrayList<String>) logs.getStringList("logs");
+				list.add(Bukkit.getOfflinePlayer(UUID.fromString(args[0])).getName() + ", Unbanned for" + message +  ", " + new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()).toString().replaceAll(":", ";"));
+				logs.set("logs", list);
+				
+				sender.sendMessage(ChatColor.GREEN + Bukkit.getOfflinePlayer(UUID.fromString(args[0])).getName() + " has been unbanned");
+				return true;
+			}
+
+		}
+		return false;
+	}
+
+}
