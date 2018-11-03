@@ -1,0 +1,23 @@
+name: SimpleBlacklist
+version: 1.0
+author: Aplacia
+main: aplacia.Main
+commands:
+  ban:
+    description: Bans the targeted player
+    permission: SimpleBlacklist.ban
+    permission-message: You do not have permission to use this command
+    usage: /ban <player> <reason>
+  unban:
+    description: Unbans the targeted player
+    permission: SimpleBlacklist.unban
+    permission-message: You do not have permission to use this command
+    usage: /unban <player> <reason>
+permissions:
+  SimpleBlacklist.ban:
+    description: permission for banning players
+    default: op
+  SimpleBlacklist.ban:
+    description: permission for unbanning players
+    default: op
+description: A simple plugin for blacklisting users
