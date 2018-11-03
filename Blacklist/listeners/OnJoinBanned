@@ -1,0 +1,27 @@
+package listeners;
+
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerLoginEvent.Result;
+
+import aplacia.Main;
+
+public class OnJoinBanned implements Listener{
+	
+	@EventHandler
+	public void onJoin(PlayerLoginEvent event) {
+		
+		Player player = event.getPlayer();
+		String str = event.getAddress().getHostAddress();
+		
+		if (Main.BannedIP.contains(str) || Main.BannedUUID.contains(player.getUniqueId().toString())) {
+			event.setKickMessage(ChatColor.RED + "You have been permanently blacklisted from the Volt Network\nThis punishment is not appealable");
+			event.setResult(Result.KICK_BANNED);
+			return;
+		}
+	}
+
+}
